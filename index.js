@@ -3,6 +3,7 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const nodeMailer = require('nodemailer');
+const https = require('https')
 
 const PORT = process.env.PORT || 80;
 
@@ -27,7 +28,7 @@ app.post('/send', sendEmail);
         next();
  });
 
- const server = https.createServer(requestController)
+ 
  app.get("/", (req, res) => {
      const htmlResponse = `
      <html>
