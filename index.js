@@ -1,26 +1,26 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const bodyparser = require('body-parser');
-const http = require('http'); // Requerir el módulo http
-const send = require('./controllers/correoController');
-const PORT = process.env.PORT || '80';
+const bodyParser = require('body-parser');
+const nodeMailer = require('nodemailer');
+
+const PORT = process.env.PORT || 80;
 
 const corsOptions = {
     origin: '*', // Permite cualquier origen
     methods: 'GET, POST, PUT, DELETE, OPTIONS', // Permite todos los métodos HTTP
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept', // Cabeceras permitidas
   };
-
-app.use(bodyparser.json({ extended: true }));
-app.use(bodyparser.urlencoded({ extended: true }));
-app.use(cors(corsOptions));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(cors(corsOptions));
+  
 function requestController(req, res){
     console.log('hola')
     res.send('hola nodejs')
 }
+app.post('/send', sendEmail);
 
-app.post('/send', send.sendEmail);
    app.use((req, res, next) => {
       res.header("Access-Control-Allow-Origin", "*");
      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -43,6 +43,6 @@ app.post('/send', send.sendEmail);
  })
  
 
- app.listen(PORT, ()=> {
-    console.log('escuchando' + PORT)
-})
+ app.listen(PORT, () => {
+    console.log('Escuchando en el puerto ' + PORT);
+});

@@ -2,22 +2,22 @@ const {request, response} = require('express');
 const nodeMailer = require('nodemailer');
 
 
-const sendEmail = (req=request, resp=response) => {
+const sendEmail = (req,res) => {
     let body = req.body;
     let email = process.env.EMAIL; 
     
 
-    let config = nodeMailer.createTransport({
-        host:'smtp.gmail.com',
-        post:465,
-        secure: true,
-        auth:{
-            user:email,
-            pass:process.env.password
+    const transporter = nodeMailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 587, // Puerto correcto para TLS
+        secure: false, // Habilitar STARTTLS
+        auth: {
+            user: email,
+            pass: process.env.PASSWORD // Asegúrate de que la variable de entorno sea PASSWORD
         }
-    })
+    });
 
-    const transporter = nodeMailer.createTransport(config);
+   
  const emailBody = `
     Nombre: ${body.nombre}
     \n
@@ -40,13 +40,12 @@ const sendEmail = (req=request, resp=response) => {
 transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
         console.log(error);
-        return resp.json({ ok: false, msg: error.message });
+        return res.status(500).json({ ok: false, msg: error.message });
     }
     console.log('Correo enviado: ' + info.response);
-    return resp.json({ ok: true, msg: 'Correo enviado exitosamente' });
+    return res.status(200).json({ ok: true, msg: 'Correo enviado exitosamente' });
 });
-};
-
+}
 module.exports = {
 sendEmail
 };
