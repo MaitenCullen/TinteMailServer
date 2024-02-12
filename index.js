@@ -3,7 +3,8 @@ const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const nodeMailer = require('nodemailer');
-const https = require('https')
+const https = require('https');
+let send = require('./controllers/correoController');
 
 const PORT = process.env.PORT || 80;
 
@@ -20,15 +21,13 @@ function requestController(req, res){
     console.log('hola')
     res.send('hola nodejs')
 }
-app.post('/send', sendEmail);
-
+app.post('/send', send.sendEmail);
    app.use((req, res, next) => {
       res.header("Access-Control-Allow-Origin", "*");
      res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         next();
  });
-
- 
+ const server = https.createServer(requestController)
  app.get("/", (req, res) => {
      const htmlResponse = `
      <html>
